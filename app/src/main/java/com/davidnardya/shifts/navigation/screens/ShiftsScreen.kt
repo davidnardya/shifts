@@ -24,16 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.davidnardya.shifts.viewmodels.MainViewModel
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import com.davidnardya.shifts.models.Guard
 import com.davidnardya.shifts.models.Shift
 import com.davidnardya.shifts.utils.ListToFileHelper
 import com.davidnardya.shifts.utils.showToast
+import com.davidnardya.shifts.viewmodels.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -41,7 +39,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ShiftsScreen(navController: NavHostController, viewModel: MainViewModel) {
+fun ShiftsScreen(viewModel: MainViewModel) {
     val list = viewModel.shiftListLiveData.observeAsState()
     val guards = viewModel.guardsListLiveData.observeAsState()
     val guardsOnVacation = viewModel.guardsOnVacationLiveData.observeAsState()

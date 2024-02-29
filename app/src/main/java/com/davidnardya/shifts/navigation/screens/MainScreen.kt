@@ -31,7 +31,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -73,6 +72,7 @@ fun MainScreen(navController: NavHostController, viewModel: MainViewModel) {
         EmailDialogButton()
     }
 }
+
 @Composable
 fun EmailDialogButton() {
     var showDialog by remember { mutableStateOf(false) }
@@ -126,10 +126,16 @@ fun EmailDialogButton() {
 
 @Composable
 fun ClickableEmailOrGitHubText(link: String, isGithub: Boolean = false) {
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = colorResource(id = R.color.highlight_blue), fontSize = 16.sp)) {
+        withStyle(
+            style = SpanStyle(
+                color = colorResource(id = R.color.highlight_blue),
+                fontSize = 16.sp
+            )
+        ) {
             append(link)
             addStringAnnotation(
                 tag = "URL",
