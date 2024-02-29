@@ -27,7 +27,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Shifts.route
         ) {
-            ShiftsScreen(navController, viewModel)
+            ShiftsScreen(viewModel)
         }
         composable(
             route = Screen.Guards.route
