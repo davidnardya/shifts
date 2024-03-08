@@ -9,7 +9,7 @@ import com.davidnardya.shifts.dao.GuardsDao
 import com.davidnardya.shifts.models.Guard
 
 
-@Database(entities = [Guard::class], version = 1, exportSchema = false)
+@Database(entities = [Guard::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class GuardsDataBase : RoomDatabase() {
 

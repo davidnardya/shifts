@@ -2,6 +2,7 @@ package com.davidnardya.shifts.navigation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,6 +42,7 @@ fun GuardsScreen(navController: NavHostController, viewModel: MainViewModel) {
             itemsIndexed(guardsList) { index, guard ->
                 Row(
                     modifier = Modifier
+                        .height(IntrinsicSize.Min) //intrinsic measurements
                         .fillMaxWidth()
                         .padding(vertical = 16.dp)
                         .clickable {
@@ -50,7 +52,19 @@ fun GuardsScreen(navController: NavHostController, viewModel: MainViewModel) {
                         },
                     horizontalArrangement = Arrangement.Center
                 ) {
+
                     Text(text = guard.name.toString())
+                    if(guard.offTime?.isNotEmpty() == true) {
+                        var guardOffTime = "אילוצים:"
+                        guard.offTime?.forEachIndexed { index, offTime ->
+                            val result =
+                                offTime.day?.text?.replace("יום", "")?.filter { !it.isWhitespace() }
+                            guardOffTime += if (index == guard.offTime?.lastIndex) " $result" else " $result,"
+                        }
+                        Text(text = " | ")
+                        Text(text = guardOffTime)
+                    }
+
                 }
                 if (index != guardsList.lastIndex) {
                     Divider(

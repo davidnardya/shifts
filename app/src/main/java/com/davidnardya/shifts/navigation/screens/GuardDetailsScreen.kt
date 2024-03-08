@@ -1,5 +1,6 @@
 package com.davidnardya.shifts.navigation.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.davidnardya.shifts.models.OffTime
 import com.davidnardya.shifts.models.ShiftDay
 import com.davidnardya.shifts.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -63,21 +65,37 @@ fun GuardDetailsScreen(navController: NavHostController, viewModel: MainViewMode
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    var isChecked by remember { mutableStateOf(offTime.contains(shiftDay)) }
+                    var isOffTimeChecked by remember { mutableStateOf(offTime.any { it.day == shiftDay }) }
+                    var isGuardAskedChecked by remember { mutableStateOf(false) }
+                    offTime.forEach {
+                        if(it.day == shiftDay) {
+                            isGuardAskedChecked = it.didGuardAsk == true
+                        }
+                    }
                     Checkbox(
-                        checked = isChecked,
+                        checked = isOffTimeChecked,
                         onCheckedChange = { isCheckedChanged ->
-                            isChecked = isCheckedChanged
+                            isOffTimeChecked = isCheckedChanged
                             val newList = offTime.toMutableList()
-                            if (isCheckedChanged && !offTime.contains(shiftDay)) {
-                                newList.add(shiftDay)
+                            if (isCheckedChanged && !offTime.any { it.day == shiftDay }) {
+                                newList.add(
+                                    OffTime(
+                                        shiftDay,
+                                        isGuardAskedChecked
+                                    )
+                                )
                                 newList.let {
                                     offTime = it
                                 }
 
                             }
-                            if (!isCheckedChanged && offTime.contains(shiftDay)) {
-                                newList.remove(shiftDay)
+                            if (!isCheckedChanged && offTime.any { it.day == shiftDay }) {
+                                newList.remove(
+                                    OffTime(
+                                        shiftDay,
+                                        isGuardAskedChecked
+                                    )
+                                )
                                 newList.let {
                                     offTime = it
                                 }
@@ -88,12 +106,48 @@ fun GuardDetailsScreen(navController: NavHostController, viewModel: MainViewMode
                         text = shiftDay.text,
                         modifier = Modifier.padding(start = 8.dp)
                     )
+
+                    Checkbox(
+                        checked = isGuardAskedChecked,
+                        onCheckedChange = { isCheckedChanged ->
+                            isGuardAskedChecked = isCheckedChanged
+                            val newList = offTime.filter { it.day != shiftDay }.toMutableList()
+//                            if (isCheckedChanged) {
+                            newList.add(
+                                OffTime(
+                                    shiftDay,
+                                    isCheckedChanged
+                                )
+                            )
+                            newList.let {
+                                offTime = it
+                            }
+
+//                            }
+//                            if (!isCheckedChanged) {
+//                                newList.remove(
+//                                    OffTime(
+//                                        shiftDay,
+//                                        !isGuardAskedChecked
+//                                    )
+//                                )
+//                                newList.let {
+//                                    offTime = it
+//                                }
+//                            }
+                        }
+                    )
+                    Text(
+                        text = "לבקשת השומר?",
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                 }
             }
         }
         Button(onClick = {
             if (guardState.value != null) {
                 scope.launch(Dispatchers.IO) {
+                    Log.d("123321", "offTime $offTime")
                     viewModel.updateGuardDetails(guardState.value, name, offTime)
                     viewModel.getGuardList()
                 }
@@ -121,7 +175,7 @@ fun GuardDetailsScreen(navController: NavHostController, viewModel: MainViewMode
             )
         }
 
-        if(guardState.value != null) {
+        if (guardState.value != null) {
             Button(
                 onClick = {
                     scope.launch(Dispatchers.IO) {

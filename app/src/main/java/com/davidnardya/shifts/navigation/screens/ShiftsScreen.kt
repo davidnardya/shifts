@@ -169,21 +169,27 @@ fun ShiftsScreen(viewModel: MainViewModel) {
 
                 guardsOnVacation.value?.let { guardsOnVaca ->
                     itemsIndexed(guardsOnVaca) { index, guard ->
-                        if (guard.offTime?.contains(day) == true) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                            ) {
-                                Text(text = guard.name.toString())
-                            }
-                            if (index != guardsOnVaca.lastIndex) {
-                                Divider(
+                        guard.offTime?.forEach { offTime ->
+                            if (offTime.day == day) {
+                                Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(1.dp)
                                         .padding(horizontal = 16.dp),
-                                )
+                                ) {
+                                    Text(text = if(offTime.didGuardAsk == true) {
+                                        "לבקשת השומר: ${guard.name}"
+                                    } else {
+                                        guard.name.toString()
+                                    })
+                                }
+                                if (index != guardsOnVaca.lastIndex) {
+                                    Divider(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(1.dp)
+                                            .padding(horizontal = 16.dp),
+                                    )
+                                }
                             }
                         }
                     }
@@ -212,8 +218,14 @@ fun printList(shiftList: List<Shift>, guardsOnVacation: List<Guard>): String {
         result += "ברענון"
         result += "\n"
         guardsOnVacation.forEach { guard ->
-            if (guard.offTime?.contains(day) == true) {
-                result += "${guard.name}\n"
+            guard.offTime?.forEach { offTime ->
+
+                if (offTime.day == day) {
+                    if(offTime.didGuardAsk == true) {
+                        result += "לבקשת השומר: "
+                    }
+                    result += "${guard.name}\n"
+                }
             }
         }
         result += "\n"

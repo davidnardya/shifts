@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidnardya.shifts.models.Guard
+import com.davidnardya.shifts.models.OffTime
 import com.davidnardya.shifts.models.Shift
-import com.davidnardya.shifts.models.ShiftDay
 import com.davidnardya.shifts.repositories.MainRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,10 +50,10 @@ class MainViewModel @Inject constructor(
 
     }
 
-    suspend fun updateGuardDetails(oldGuard: Guard?, name: String?, offTime: List<ShiftDay>?) =
+    suspend fun updateGuardDetails(oldGuard: Guard?, name: String?, offTime: List<OffTime>?) =
         mainRepository.updateGuardDetails(oldGuard, name, offTime)
 
-    suspend fun createNewGuard(name: String?, offTime: List<ShiftDay>?) =
+    suspend fun createNewGuard(name: String?, offTime: List<OffTime>?) =
         mainRepository.createNewGuard(name, offTime)
 
     suspend fun deleteGuard(guard: Guard?) = mainRepository.deleteGuard(guard)

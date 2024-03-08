@@ -8,5 +8,5 @@ data class Guard(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     var name: String? = "",
-    var offTime: List<ShiftDay>? = null
+    var offTime: List<OffTime>? = null
 )
